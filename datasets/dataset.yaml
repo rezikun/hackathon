@@ -1,7 +1,6 @@
-path: ../thermal_signature_drone_detection/datasets # dataset root dir
-train: images/train # train images (relative to 'path') 128 images
-val: images/validate # val images (relative to 'path') 128 images
-test: images/test
+train: ../train/images# train images (relative to 'path') 128 images
+val: ../validate/images # val images (relative to 'path') 128 images
+test: ../test/images
 
-names:
-    0: drone
+nc: 1
+names: ['drone']
