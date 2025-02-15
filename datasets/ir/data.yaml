@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['0', '1', 'drone']
+
+roboflow:
+  workspace: drone-4uj5r
+  project: droneicip-0m0ux
+  version: 6
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/drone-4uj5r/droneicip-0m0ux/dataset/6
