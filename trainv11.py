@@ -53,8 +53,7 @@ def train(dataset_path, run_name, epochs, resume_from=None):
         device=0,
         save_period=5,
         project="/content/gdrive/MyDrive/Runs",
-        name=run_name,
-        resume=resume_checkpoint  # Resume training from the provided checkpoint path (if exists)
+        name=run_name
     )
     print(results)
 
