@@ -42,8 +42,10 @@ def train(dataset_path, run_name, epochs, resume_from=None):
 
     if resume_checkpoint:
         print(f"Resuming from checkpoint: {resume_checkpoint}")
+        model = YOLO(resume_checkpoint)
     else:
         print("No checkpoint provided, starting fresh.")
+        model = YOLO('yolo11s.pt')
 
     results = model.train(
         data=corrected_dataset_path,  # Use the corrected dataset path with absolute paths
