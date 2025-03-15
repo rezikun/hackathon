@@ -27,7 +27,7 @@ def make_paths_absolute(dataset_path):
     return dataset_path
 
 
-def train(dataset_path, run_name, epochs):
+def train(dataset_path, run_name, epochs, resume_from=None):
     model = YOLO('yolo11s.pt')
 
     # If no custom name is provided, use the current datetime
@@ -37,13 +37,28 @@ def train(dataset_path, run_name, epochs):
     # Make sure paths in dataset.yaml are absolute
     corrected_dataset_path = make_paths_absolute(dataset_path)
 
+    # If resuming, make sure to specify the checkpoint path
+    resume_checkpoint = None
+    if resume_from:
+        if os.path.isdir(resume_from):
+            # Look for the latest checkpoint in the directory
+            checkpoint_files = [f for f in os.listdir(resume_from) if f.endswith('.pt')]
+            checkpoint_files.sort(reverse=True)  # Sort by filename to get the latest one
+            if checkpoint_files:
+                resume_checkpoint = os.path.join(resume_from, checkpoint_files[0])
+            else:
+                print("Warning: No checkpoints found in the specified directory.")
+        else:
+            resume_checkpoint = resume_from
+
     results = model.train(
         data=corrected_dataset_path,  # Use the corrected dataset path with absolute paths
         epochs=epochs,
         device=0,
         save_period=5,
         project="/content/gdrive/MyDrive/Runs",
-        name=run_name
+        name=run_name,
+        resume=resume_checkpoint  # Resume training from the checkpoint (if available)
     )
     print(results)
 
@@ -62,7 +77,8 @@ if __name__ == '__main__':
     parser.add_argument("--dataset", type=str, required=True, help="Path to dataset.yaml file.")
     parser.add_argument("--name", type=str, default="", help="Custom name for the training run.")
     parser.add_argument("--epochs", type=int, default=200, help="Number of epochs for training (default: 200).")
+    parser.add_argument("--resume_from", type=str, default=None, help="Path to resume training from a checkpoint.")
 
     args = parser.parse_args()
 
-    train(args.dataset, args.name, args.epochs)
+    train(args.dataset, args.name, args.epochs, args.resume_from)
