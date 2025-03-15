@@ -7,9 +7,7 @@ from datetime import datetime
 
 def make_paths_absolute(dataset_path):
     """Parses the dataset.yaml file and ensures image paths are absolute."""
-
-    # Get the directory of the dataset.yaml file (this will be {somepath}/datasets)
-    base_dir = os.path.dirname(dataset_path)
+    base_dir = os.path.dirname(os.path.abspath(dataset_path))
 
     with open(dataset_path, 'r') as f:
         dataset = yaml.safe_load(f)
@@ -20,7 +18,7 @@ def make_paths_absolute(dataset_path):
             path = dataset[split]
             # If the path is relative, make it absolute
             if not os.path.isabs(path):
-                dataset[split] = os.path.join(base_dir, path)  # Convert relative to absolute path
+                dataset[split] = os.path.join(base_dir, path.replace("../", ""))  # Convert relative to absolute path
 
     # Write the corrected dataset.yaml with absolute paths
     with open(dataset_path, 'w') as f:
